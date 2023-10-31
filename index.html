@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Block21 Workshop</title>
+  <script src="index.js" defer ></script>
+  <link rel="stylesheet" href="index.css"/>
+</head>
+<body>
+  <h1>Parties!</h1>
+  
+  <!-- form to input/add new parties -->
+  <form id="addParty">
+    <label>
+      event name
+      <input type="text" name="names"/>
+    </label>
+    <label>
+      date
+      <input type="text" name="dates"/>
+    </label>
+    <label> 
+      time
+      <input type="number" name="times"/>
+    </label>
+    <label>
+      location
+      <input type="text" name="locations"/>
+    </label>
+    <label>
+      description
+      <input type="text" name="descriptions"/>
+    </label>
+    <button>Add Party!</button>
+  </form>
+
+ <!-- where parties will be listed -->
+  <ul id="parties"></ul>
+
+</body>
+</html>
