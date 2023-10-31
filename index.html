@@ -8,31 +8,20 @@
   <link rel="stylesheet" href="index.css"/>
 </head>
 <body>
-  <h1>Parties!</h1>
+  <h1>Party Planner v.1</h1>
   
+  <section id="party-list">List of Parties</section>
+  
+  <h2>Add new party</h2>
   <!-- form to input/add new parties -->
-  <form id="addParty">
-    <label>
-      event name
-      <input type="text" name="names"/>
-    </label>
-    <label>
-      date
-      <input type="text" name="dates"/>
-    </label>
-    <label> 
-      time
-      <input type="number" name="times"/>
-    </label>
-    <label>
-      location
-      <input type="text" name="locations"/>
-    </label>
-    <label>
-      description
-      <input type="text" name="descriptions"/>
-    </label>
-    <button>Add Party!</button>
+  <form id="party-form">
+    
+    <input id="name" type="text" placeholder="name">
+    <input id="description" type="text" placeholder="description">
+    <input id="date" type="datetime-local">
+    <input id="location" type="text" placeholder="location">
+
+    <button type="submit">Add Party!</button>
   </form>
 
  <!-- where parties will be listed -->

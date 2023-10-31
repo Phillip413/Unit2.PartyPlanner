@@ -2,98 +2,76 @@ const COHORT = `2309-FTB-ET-WEB-FT`;
 const API_URL = `https://fsa-crud-2aa9294fe819.herokuapp.com/api/${COHORT}/events`;
 
 
-//object with parties array as property
-const object = {
-  parties: [],
+//object with events array as a property
+const state = {
+  events: []
 }
 
-//UL (party list on main page)
-const partyList = document.querySelector("#parties");
+const partyList = document.getElementById("party-list");
 
-const addPartyForm = document.querySelector("#addParty");
+const partyForm = documnet.getElementById("party-form");
 
-addPartyForm.addEventListener("submit", addPartyForm);
+async function createEvent(event) {
+  event.preventDefault();
+  try{
+    const response = await fetch (API + "/events", {
+      method: "POST",
+      headers: {"Content-type": "application/JSON"}, //information for how we format request
+      
+      //object that represents the thing we want to create
+      body: JSON.stringify ({
+        name: document.getElementById("name").value,
+        description: document.getElementById("description").value ,
+        date: `${document.getElementById("date").value}:00.000Z`,
+        location: document.getElementById("location").value,
+      })
+    });
+    getParties();
 
-async function render(){
-  await getParties()
-  renderParties()
-}
-renderParties()
-
-
-async function getParties(){
-  try {
-    let response = await fetch(API_URL)
-    let json = await response.json()
-
-    console.log("json.data: ", json.data)
-
-    object.parties = json.data
-  } catch (err){
+  }catch(error){
     console.error(error)
   }
 }
 
-async function renderParties(){
-  if (!object.parties.length){
-    partyList.innerHTML = "<li>No Parties. :(<li>"
-    return
+partyForm.addEventListener("submit", createEvent)
+
+async function getParties() {
+  try {
+      const response = await fetch(API + "/events");
+      const json = await response.json();
+      state.events = json.data;
+      render();
+
+  } catch (error) {
+      console.error(error);
   }
+}
 
-  const partyCards = object.parties.map((party) => {
-    const list = document.createElement("li")
-    list.innerHTML = `<h2>${party.name}</h2>
-                      <p>${party.date}</p>
-                      <p>${party.time}</p>
-                      <p>${party.location}</p>
-                      <p>${party.description}</p>
-                                                 `
-    
-    //delete button
-    const deleteBtn = document.createElement("button")
-    deleteBtn.innerText = "DELETE!"
-    deleteBtn.addEventListener("click", () => {
-      deleteParty(party.id)
+
+function render(){
+  const events = state.events.map((event)=>{
+    const article = document.createElement("article");
+    const deleteBtn = document.createElement("button");
+    deleteBtn.addEventListener("click", async() => {
+      try {
+        const response = await fetch(API + `/events/${event.id}`, {method:"DELETE"});
+        getParties();
+      } catch (error) {
+        console.error(error)
+      }
     })
-    list.appendChild(deleteBtn);
-    return list;
+    deleteBtn.innertext = "DELETE"
 
+    article.innerHTML =
+                          `<h3> ${event.name}</h3>
+                          <address>${event.location}</address>`
+
+    article.append(deleteBtn);
+    
+    return article;
+
+    partyList.replaceChildren(...events); //take party list and replace everything that was there with values in events            
   })
-
-partyList.replaceChildren(...partyCards);
-
 }
 
-async function addParty(event) {
-  event.preventDefault()
-
-  let name = addPartyForm.name.value
-  let date = addPartyForm.date.value
-  let time = addPartyForm.time.value
-  let location = addPartyForm.location.value
-  let description = addPartyForm.description.value
-
-  const response = await fetch(API_URL, {
-    method: "POST",
-    headers: {"Content-type": "application/json"},
-    body: JSON.stringify({
-      name,
-      date,
-      time,
-      location,
-      description,
-    }),
-  })
-  console.log(response)
-  renderParties()
-}
-
-async function deleteParty(id) {
-  const response = await fetch(API_URL + `/${id}`, {
-    method: 'DELETE',
-  })
-
-  console.log('Deleted?:', response)
-
-  renderParties()
-}
+getEvents();
